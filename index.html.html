@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca de Herramientas IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #0b2230 0%, #1a3a4a 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #ecf4f8;
+            line-height: 1.55;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 1.25rem auto;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+            overflow: hidden;
+        }
+        
+        .header {
+            padding: 22px;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            background: linear-gradient(180deg, rgba(11,34,48,0.35), rgba(11,34,48,0.85)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="circuit" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="rgba(46,201,168,0.1)"/><path d="M2,2 L18,2 M2,2 L2,18" stroke="rgba(46,201,168,0.05)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23circuit)"/></svg>') center/cover no-repeat;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #2ec9a8, #4facfe);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: white;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-weight: 800;
+            font-size: 1.9rem;
+            line-height: 1.2;
+        }
+        
+        .header .sub {
+            margin: 0.25rem 0 0;
+            color: #b7d0da;
+            font-size: 0.95rem;
+        }
+        
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            padding: 18px;
+        }
+        
+        .category-card {
+            background: #0f2e40;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        
+        .category-card:focus-within {
+            box-shadow: 0 0 0 3px rgba(46,201,168,0.35);
+        }
+        
+        .category-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(46,201,168,0.3);
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.10);
+        }
+        
+        .badge {
+            font-weight: 700;
+            font-size: 0.8rem;
+            border-radius: 999px;
+            padding: 0.35rem 0.6rem;
+            color: #ecf4f8;
+            background: rgba(46,201,168,0.18);
+            border: 1px solid rgba(46,201,168,0.45);
+        }
+        
+        .category-title {
+            margin: 0;
+            font-weight: 800;
+            font-size: 1.05rem;
+        }
+        
+        .category-content {
+            padding: 12px 14px 14px;
+        }
+        
+        .category-description {
+            margin: 0 0 0.5rem;
+            color: #b7d0da;
+            font-size: 0.95rem;
+        }
+        
+        .tool {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 12px;
+            padding: 0.55rem 0.6rem;
+            margin: 0.5rem 0;
+            transition: all 0.2s ease;
+        }
+        
+        .tool:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(46,201,168,0.25);
+        }
+        
+        .tool-icon {
+            flex: 0 0 24px;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .tool-main {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.4rem;
+            flex: 1;
+        }
+        
+        .tool-name {
+            color: #e9fbff;
+            text-decoration: none;
+            font-weight: 800;
+            display: inline-block;
+        }
+        
+        .tool-name:hover {
+            color: #2ec9a8;
+        }
+        
+        .tool-plan {
+            display: inline-block;
+            font-size: 0.74rem;
+            line-height: 1;
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 8px;
+            padding: 0.18rem 0.45rem;
+            color: #d9fffb;
+        }
+        
+        .tool-meta {
+            display: block;
+            width: 100%;
+            color: #b7d0da;
+            font-size: 0.85rem;
+            margin-top: 0.15rem;
+        }
+        
+        .note {
+            margin-top: 0.6rem;
+            padding: 0.6rem 0.7rem;
+            border-left: 4px solid #e79a32;
+            background: rgba(231,154,50,0.12);
+            border-radius: 8px;
+            color: #ffe7c2;
+            font-size: 0.9rem;
+        }
+        
+        .footer {
+            padding: 14px 18px;
+            border-top: 1px solid rgba(255,255,255,0.12);
+            color: #b7d0da;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .library-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="brand">
+                <div class="brand-logo">🧪</div>
+                <div>
+                    <h1>Biblioteca de Herramientas de IA</h1>
+                    <p class="sub">Centro de Experimentación Pedagógica — recursos gratuitos y accesibles</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="library-grid">
+            <!-- Procesamiento de Lenguaje -->
+            <article class="category-card" tabindex="0">
+                <div class="category-header">
+                    <span class="badge">🗣️ Lenguaje</span>
+                    <h2 class="category-title">Procesamiento de Lenguaje</h2>
+                </div>
+                <div class="category-content">
+                    <p class="category-description">Generación y análisis de texto para materiales didácticos, feedback y síntesis.</p>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">💬</div>
+                        <div class="tool-main">
+                            <a href="https://chat.openai.com" target="_blank" rel="noopener" class="tool-name">ChatGPT</a>
+                            <span class="tool-plan">Freemium</span>
+                            <span class="tool-meta">Ideación y redacción asistida.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">🤖</div>
+                        <div class="tool-main">
+                            <a href="https://claude.ai" target="_blank" rel="noopener" class="tool-name">Claude</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Análisis de textos extensos.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">💎</div>
+                        <div class="tool-main">
+                            <a href="https://gemini.google.com" target="_blank" rel="noopener" class="tool-name">Gemini</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Integración con Google Workspace.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">🔍</div>
+                        <div class="tool-main">
+                            <a href="https://www.perplexity.ai" target="_blank" rel="noopener" class="tool-name">Perplexity</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Búsquedas con citación de fuentes.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">🎓</div>
+                        <div class="tool-main">
+                            <a href="https://www.magicschool.ai" target="_blank" rel="noopener" class="tool-name">MagicSchool</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Planeación y rúbricas docentes.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="note">⚠️ Verificar información y sesgos en las respuestas.</div>
+                </div>
+            </article>
+
+            <!-- Generación Visual -->
+            <article class="category-card" tabindex="0">
+                <div class="category-header">
+                    <span class="badge">🎨 Visual</span>
+                    <h2 class="category-title">Generación Visual</h2>
+                </div>
+                <div class="category-content">
+                    <p class="category-description">Imágenes y gráficos para ilustraciones educativas e infografías.</p>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">🎨</div>
+                        <div class="tool-main">
+                            <a href="https://www.canva.com" target="_blank" rel="noopener" class="tool-name">Canva</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Plantillas y generación básica.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">🔥</div>
+                        <div class="tool-main">
+                            <a href="https://www.adobe.com/products/firefly.html" target="_blank" rel="noopener" class="tool-name">Adobe Firefly</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Edición y generación con créditos.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">🎭</div>
+                        <div class="tool-main">
+                            <a href="https://leonardo.ai" target="_blank" rel="noopener" class="tool-name">Leonardo AI</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Modelos con cupos diarios.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">✏️</div>
+                        <div class="tool-main">
+                            <a href="https://quickdraw.withgoogle.com" target="_blank" rel="noopener" class="tool-name">Quick, Draw!</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Juego/dataset para reconocer trazos.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="note">⚠️ Verificar licencias de uso comercial en las imágenes generadas.</div>
+                </div>
+            </article>
+            
+            <!-- Especializadas en Educación -->
+            <article class="category-card" tabindex="0">
+                <div class="category-header">
+                    <span class="badge">📚 Educación</span>
+                    <h2 class="category-title">Especializadas en Educación</h2>
+                </div>
+                <div class="category-content">
+                    <p class="category-description">Presentaciones, evaluaciones y organización de materiales.</p>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">📊</div>
+                        <div class="tool-main">
+                            <a href="https://gamma.app" target="_blank" rel="noopener" class="tool-name">Gamma</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Presentaciones automáticas.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">❓</div>
+                        <div class="tool-main">
+                            <a href="https://quizizz.com" target="_blank" rel="noopener" class="tool-name">Quizizz</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Cuestionarios y práctica interactiva.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">📔</div>
+                        <div class="tool-main">
+                            <a href="https://notebooklm.google" target="_blank" rel="noopener" class="tool-name">NotebookLM</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Estudia y conversa con tus fuentes.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">🎓</div>
+                        <div class="tool-main">
+                            <a href="https://www.magicschool.ai" target="_blank" rel="noopener" class="tool-name">MagicSchool</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Planeación, rúbricas y feedback.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">📍</div>
+                        <div class="tool-main">
+                            <a href="https://pinpoint.google.com" target="_blank" rel="noopener" class="tool-name">Google Pinpoint</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Análisis de textos, PDFs y fuentes periodísticas.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="note">⚠️ Siempre revisar el contenido generado antes de usar en clase.</div>
+                </div>
+            </article>
+            
+            <!-- Audio y Accesibilidad -->
+            <article class="category-card" tabindex="0">
+                <div class="category-header">
+                    <span class="badge">🔊 Audio</span>
+                    <h2 class="category-title">Audio y Accesibilidad</h2>
+                </div>
+                <div class="category-content">
+                    <p class="category-description">Voz sintética y lectura para materiales inclusivos.</p>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">🗣️</div>
+                        <div class="tool-main">
+                            <a href="https://elevenlabs.io" target="_blank" rel="noopener" class="tool-name">ElevenLabs</a>
+                            <span class="tool-plan">Freemium</span>
+                            <span class="tool-meta">Síntesis de voz natural.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">📖</div>
+                        <div class="tool-main">
+                            <a href="https://speechify.com" target="_blank" rel="noopener" class="tool-name">Speechify</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Conversión texto a voz en navegador.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="note">⚠️ Las voces sintéticas pueden tener limitaciones de naturalidad en algunos idiomas.</div>
+                </div>
+            </article>
+            
+            <!-- Video -->
+            <article class="category-card" tabindex="0">
+                <div class="category-header">
+                    <span class="badge">🎬 Video</span>
+                    <h2 class="category-title">Generación y Edición de Video</h2>
+                </div>
+                <div class="category-content">
+                    <p class="category-description">Creación de videos con IA y plantillas.</p>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">🎥</div>
+                        <div class="tool-main">
+                            <a href="https://invideo.io" target="_blank" rel="noopener" class="tool-name">Invideo</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Videos desde guiones o prompts.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">🎞️</div>
+                        <div class="tool-main">
+                            <a href="https://labs.google/fx/vids" target="_blank" rel="noopener" class="tool-name">Vids (Google)</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Editor colaborativo de video.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">🌲</div>
+                        <div class="tool-main">
+                            <a href="https://www.renderforest.com" target="_blank" rel="noopener" class="tool-name">Renderforest</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Plantillas y animaciones educativas.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="note">⚠️ Los videos gratuitos suelen incluir marca de agua de la plataforma.</div>
+                </div>
+            </article>
+            
+            <!-- Música -->
+            <article class="category-card" tabindex="0">
+                <div class="category-header">
+                    <span class="badge">🎵 Música</span>
+                    <h2 class="category-title">Música y Creatividad Sonora</h2>
+                </div>
+                <div class="category-content">
+                    <p class="category-description">Pistas musicales libres de derechos para clases y videos.</p>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">🎶</div>
+                        <div class="tool-main">
+                            <a href="https://soundraw.io" target="_blank" rel="noopener" class="tool-name">Soundraw</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Música generada automáticamente.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tool">
+                        <div class="tool-icon">🎼</div>
+                        <div class="tool-main">
+                            <a href="https://mubert.com" target="_blank" rel="noopener" class="tool-name">Mubert</a>
+                            <span class="tool-plan">Gratis</span>
+                            <span class="tool-meta">Generación de música libre de copyright.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="note">⚠️ Verificar derechos de autor antes de usar música en proyectos públicos.</div>
+                </div>
+            </article>
+        </div>
+        
+        <div class="footer">
+            <strong>Recordatorio:</strong> elegí primero la necesidad pedagógica y luego la herramienta.
+            <em>Última actualización: sep-2025.</em>
+        </div>
+    </div>
+</body>
+</html>
